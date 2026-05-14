@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>1100</width><height>700</height></rect>
+  </property>
+  <property name="windowTitle">
+   <string>误差椭圆绘制系统</string>
+  </property>
+
+  <!-- 中心控件：水平分割器 -->
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+
+      <!-- 左侧：结果表格 -->
+      <widget class="QTableWidget" name="tableWidget_result">
+       <property name="alternatingRowColors"><bool>true</bool></property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+      </widget>
+
+      <!-- 右侧：绘图区（将被提升为 DrawWidget） -->
+      <widget class="QWidget" name="widget_canvas">
+       <property name="minimumSize">
+        <size><width>400</width><height>300</height></size>
+       </property>
+      </widget>
+
+     </widget>
+    </item>
+   </layout>
+  </widget>
+
+  <!-- 菜单栏 -->
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect><x>0</x><y>0</y><width>1100</width><height>30</height></rect>
+   </property>
+
+   <widget class="QMenu" name="menu_file">
+    <property name="title"><string>文件(&amp;F)</string></property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+
+   <widget class="QMenu" name="menu_op">
+    <property name="title"><string>操作(&amp;O)</string></property>
+    <addaction name="actionCalculate"/>
+    <addaction name="actionDraw"/>
+    <addaction name="separator"/>
+    <addaction name="actionClear"/>
+   </widget>
+
+   <addaction name="menu_file"/>
+   <addaction name="menu_op"/>
+  </widget>
+
+  <!-- 状态栏 -->
+  <widget class="QStatusBar" name="statusbar"/>
+
+  <!-- 工具栏 -->
+  <widget class="QToolBar" name="toolBar">
+   <attribute name="toolBarArea"><enum>TopToolBarArea</enum></attribute>
+   <addaction name="actionOpen"/>
+   <addaction name="actionCalculate"/>
+   <addaction name="actionSave"/>
+   <addaction name="separator"/>
+   <addaction name="actionDraw"/>
+   <addaction name="separator"/>
+   <addaction name="actionClear"/>
+  </widget>
+
+  <!-- Actions -->
+  <action name="actionOpen">
+   <property name="text"><string>打开(&amp;O)</string></property>
+   <property name="shortcut"><string>Ctrl+O</string></property>
+  </action>
+  <action name="actionSave">
+   <property name="text"><string>保存结果(&amp;S)</string></property>
+   <property name="shortcut"><string>Ctrl+S</string></property>
+  </action>
+  <action name="actionExit">
+   <property name="text"><string>退出(&amp;Q)</string></property>
+   <property name="shortcut"><string>Ctrl+Q</string></property>
+  </action>
+  <action name="actionCalculate">
+   <property name="text"><string>计算(&amp;C)</string></property>
+   <property name="shortcut"><string>F5</string></property>
+  </action>
+  <action name="actionDraw">
+   <property name="text"><string>绘图(&amp;D)</string></property>
+   <property name="shortcut"><string>F6</string></property>
+  </action>
+  <action name="actionClear">
+   <property name="text"><string>清除</string></property>
+  </action>
+
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
