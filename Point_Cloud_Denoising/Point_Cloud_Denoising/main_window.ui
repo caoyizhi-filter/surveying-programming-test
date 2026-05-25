@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>1100</width><height>720</height></rect>
+  </property>
+  <property name="windowTitle">
+   <string>点云去噪系统 — 统计滤波法</string>
+  </property>
+
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="vLayout">
+
+    <!-- 进度条（计算时显示） -->
+    <item>
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value"><number>0</number></property>
+      <property name="visible"><bool>false</bool></property>
+     </widget>
+    </item>
+
+    <!-- 主分割区 -->
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation"><enum>Qt::Horizontal</enum></property>
+
+      <!-- 左：结果表格 -->
+      <widget class="QTableWidget" name="tableResult">
+       <property name="alternatingRowColors"><bool>true</bool></property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+      </widget>
+
+      <!-- 右：统计信息文本框 -->
+      <widget class="QTextEdit" name="textSummary">
+       <property name="readOnly"><bool>true</bool></property>
+       <property name="placeholderText">
+        <string>统计信息将在计算完成后显示...</string>
+       </property>
+      </widget>
+
+     </widget>
+    </item>
+
+   </layout>
+  </widget>
+
+  <!-- 菜单栏 -->
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect><x>0</x><y>0</y><width>1100</width><height>30</height></rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title"><string>文件(&amp;F)</string></property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuOp">
+    <property name="title"><string>操作(&amp;O)</string></property>
+    <addaction name="actionRun"/>
+    <addaction name="separator"/>
+    <addaction name="actionClear"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuOp"/>
+  </widget>
+
+  <!-- 工具栏 -->
+  <widget class="QToolBar" name="toolBar">
+   <attribute name="toolBarArea"><enum>TopToolBarArea</enum></attribute>
+   <addaction name="actionOpen"/>
+   <addaction name="actionRun"/>
+   <addaction name="actionSave"/>
+   <addaction name="separator"/>
+   <addaction name="actionClear"/>
+  </widget>
+
+  <!-- 状态栏 -->
+  <widget class="QStatusBar" name="statusbar"/>
+
+  <!-- Actions -->
+  <action name="actionOpen">
+   <property name="text"><string>打开点云(&amp;O)</string></property>
+   <property name="shortcut"><string>Ctrl+O</string></property>
+  </action>
+  <action name="actionRun">
+   <property name="text"><string>运行去噪(&amp;R)</string></property>
+   <property name="shortcut"><string>F5</string></property>
+  </action>
+  <action name="actionSave">
+   <property name="text"><string>保存结果(&amp;S)</string></property>
+   <property name="shortcut"><string>Ctrl+S</string></property>
+  </action>
+  <action name="actionExit">
+   <property name="text"><string>退出(&amp;Q)</string></property>
+   <property name="shortcut"><string>Ctrl+Q</string></property>
+  </action>
+  <action name="actionClear">
+   <property name="text"><string>清除</string></property>
+  </action>
+
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
