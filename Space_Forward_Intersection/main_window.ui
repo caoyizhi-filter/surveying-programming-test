@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>1000</width><height>680</height></rect>
+  </property>
+  <property name="windowTitle">
+   <string>空间前方交会解算系统</string>
+  </property>
+
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="hLayout">
+
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation"><enum>Qt::Horizontal</enum></property>
+
+      <!-- 左：输入参数区 -->
+      <widget class="QGroupBox" name="groupInput">
+       <property name="title"><string>输入参数</string></property>
+       <layout class="QFormLayout" name="formLayout">
+
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_xs1"><property name="text"><string>左片 Xs1 (m)</string></property></widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="edit_xs1"><property name="text"><string>5000.000</string></property></widget>
+        </item>
+
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_ys1"><property name="text"><string>左片 Ys1 (m)</string></property></widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="edit_ys1"><property name="text"><string>4000.000</string></property></widget>
+        </item>
+
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_zs1"><property name="text"><string>左片 Zs1 (m)</string></property></widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="edit_zs1"><property name="text"><string>1200.000</string></property></widget>
+        </item>
+
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_phi1"><property name="text"><string>左片 φ1 (°)</string></property></widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="edit_phi1"><property name="text"><string>3.0</string></property></widget>
+        </item>
+
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_omega1"><property name="text"><string>左片 ω1 (°)</string></property></widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLineEdit" name="edit_omega1"><property name="text"><string>2.0</string></property></widget>
+        </item>
+
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_kappa1"><property name="text"><string>左片 κ1 (°)</string></property></widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="edit_kappa1"><property name="text"><string>1.0</string></property></widget>
+        </item>
+
+        <item row="6" column="0">
+         <widget class="QLabel" name="label_xs2"><property name="text"><string>右片 Xs2 (m)</string></property></widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QLineEdit" name="edit_xs2"><property name="text"><string>5200.000</string></property></widget>
+        </item>
+
+        <item row="7" column="0">
+         <widget class="QLabel" name="label_ys2"><property name="text"><string>右片 Ys2 (m)</string></property></widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QLineEdit" name="edit_ys2"><property name="text"><string>4000.000</string></property></widget>
+        </item>
+
+        <item row="8" column="0">
+         <widget class="QLabel" name="label_zs2"><property name="text"><string>右片 Zs2 (m)</string></property></widget>
+        </item>
+        <item row="8" column="1">
+         <widget class="QLineEdit" name="edit_zs2"><property name="text"><string>1200.000</string></property></widget>
+        </item>
+
+        <item row="9" column="0">
+         <widget class="QLabel" name="label_phi2"><property name="text"><string>右片 φ2 (°)</string></property></widget>
+        </item>
+        <item row="9" column="1">
+         <widget class="QLineEdit" name="edit_phi2"><property name="text"><string>2.8</string></property></widget>
+        </item>
+
+        <item row="10" column="0">
+         <widget class="QLabel" name="label_omega2"><property name="text"><string>右片 ω2 (°)</string></property></widget>
+        </item>
+        <item row="10" column="1">
+         <widget class="QLineEdit" name="edit_omega2"><property name="text"><string>1.9</string></property></widget>
+        </item>
+
+        <item row="11" column="0">
+         <widget class="QLabel" name="label_kappa2"><property name="text"><string>右片 κ2 (°)</string></property></widget>
+        </item>
+        <item row="11" column="1">
+         <widget class="QLineEdit" name="edit_kappa2"><property name="text"><string>0.9</string></property></widget>
+        </item>
+
+        <item row="12" column="0">
+         <widget class="QLabel" name="label_x0"><property name="text"><string>主点 x0 (mm)</string></property></widget>
+        </item>
+        <item row="12" column="1">
+         <widget class="QLineEdit" name="edit_x0"><property name="text"><string>0.0</string></property></widget>
+        </item>
+
+        <item row="13" column="0">
+         <widget class="QLabel" name="label_y0"><property name="text"><string>主点 y0 (mm)</string></property></widget>
+        </item>
+        <item row="13" column="1">
+         <widget class="QLineEdit" name="edit_y0"><property name="text"><string>0.0</string></property></widget>
+        </item>
+
+        <item row="14" column="0">
+         <widget class="QLabel" name="label_f"><property name="text"><string>主距 f (mm)</string></property></widget>
+        </item>
+        <item row="14" column="1">
+         <widget class="QLineEdit" name="edit_f"><property name="text"><string>150.0</string></property></widget>
+        </item>
+
+        <item row="15" column="0">
+         <widget class="QLabel" name="label_x1"><property name="text"><string>左像点 x1 (mm)</string></property></widget>
+        </item>
+        <item row="15" column="1">
+         <widget class="QLineEdit" name="edit_x1"><property name="text"><string>-60.250</string></property></widget>
+        </item>
+
+        <item row="16" column="0">
+         <widget class="QLabel" name="label_y1"><property name="text"><string>左像点 y1 (mm)</string></property></widget>
+        </item>
+        <item row="16" column="1">
+         <widget class="QLineEdit" name="edit_y1"><property name="text"><string>45.120</string></property></widget>
+        </item>
+
+        <item row="17" column="0">
+         <widget class="QLabel" name="label_x2"><property name="text"><string>右像点 x2 (mm)</string></property></widget>
+        </item>
+        <item row="17" column="1">
+         <widget class="QLineEdit" name="edit_x2"><property name="text"><string>58.360</string></property></widget>
+        </item>
+
+        <item row="18" column="0">
+         <widget class="QLabel" name="label_y2"><property name="text"><string>右像点 y2 (mm)</string></property></widget>
+        </item>
+        <item row="18" column="1">
+         <widget class="QLineEdit" name="edit_y2"><property name="text"><string>-43.210</string></property></widget>
+        </item>
+
+       </layout>
+      </widget>
+
+      <!-- 右：结果区（表格+文本） -->
+      <widget class="QWidget" name="widgetRight">
+       <layout class="QVBoxLayout" name="vRight">
+
+        <item>
+         <widget class="QTableWidget" name="tableResult">
+          <property name="alternatingRowColors"><bool>true</bool></property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+         </widget>
+        </item>
+
+        <item>
+         <widget class="QTextEdit" name="textDetail">
+          <property name="readOnly"><bool>true</bool></property>
+          <property name="placeholderText">
+           <string>计算完成后显示详细参数...</string>
+          </property>
+         </widget>
+        </item>
+
+       </layout>
+      </widget>
+
+     </widget>
+    </item>
+
+   </layout>
+  </widget>
+
+  <!-- 菜单栏 -->
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect><x>0</x><y>0</y><width>1000</width><height>30</height></rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title"><string>文件(&amp;F)</string></property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuOp">
+    <property name="title"><string>操作(&amp;O)</string></property>
+    <addaction name="actionCalc"/>
+    <addaction name="separator"/>
+    <addaction name="actionClear"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuOp"/>
+  </widget>
+
+  <!-- 工具栏 -->
+  <widget class="QToolBar" name="toolBar">
+   <attribute name="toolBarArea"><enum>TopToolBarArea</enum></attribute>
+   <addaction name="actionOpen"/>
+   <addaction name="actionCalc"/>
+   <addaction name="actionSave"/>
+   <addaction name="separator"/>
+   <addaction name="actionClear"/>
+  </widget>
+
+  <widget class="QStatusBar" name="statusbar"/>
+
+  <action name="actionOpen">
+   <property name="text"><string>打开输入文件(&amp;O)</string></property>
+   <property name="shortcut"><string>Ctrl+O</string></property>
+  </action>
+  <action name="actionCalc">
+   <property name="text"><string>计算(&amp;C)</string></property>
+   <property name="shortcut"><string>F5</string></property>
+  </action>
+  <action name="actionSave">
+   <property name="text"><string>保存结果(&amp;S)</string></property>
+   <property name="shortcut"><string>Ctrl+S</string></property>
+  </action>
+  <action name="actionExit">
+   <property name="text"><string>退出(&amp;Q)</string></property>
+   <property name="shortcut"><string>Ctrl+Q</string></property>
+  </action>
+  <action name="actionClear">
+   <property name="text"><string>清除</string></property>
+  </action>
+
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
