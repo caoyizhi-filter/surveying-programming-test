@@ -98,6 +98,9 @@ class App(QMainWindow):
 
     def _fill_table(self):
         res = self._calc.result
+        if len(res.points) < 2:
+            QMessageBox.warning(self, "提示", "结果中至少需要2个点")
+            return
         p1  = res.points[0]
         p2  = res.points[1]
 

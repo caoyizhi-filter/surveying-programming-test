@@ -79,9 +79,9 @@ def dms_to_dec(dms_str: str) -> float:
     """
     s = dms_str.strip()
     # 替换各种符号为统一分隔符
-    for ch in ["°", "′", "'", "'", "'"]:
+    for ch in ["°", "′", "'"]:
         s = s.replace(ch, " ")
-    for ch in ["″", "\"", """]:
+    for ch in ["″", "\"", "\""]:
         s = s.replace(ch, "")
     parts = s.split()
     deg = float(parts[0]) if len(parts) > 0 else 0.0
@@ -93,7 +93,7 @@ def dms_to_dec(dms_str: str) -> float:
 def dec_to_dms(dec: float) -> str:
     """
     十进制度 → 度分秒字符串（公式3逆）
-    返回格式：34°45′30.00″
+    返回格式:34°45′30.00″
     """
     d = int(dec)
     rem = (dec - d) * 60.0
@@ -111,7 +111,6 @@ def code_1m(B: float, L: float) -> str:
     row = int(B / 4.0)           # 0起
     col = int((L + 180.0) / 6.0) # 列号（从西经180°起算）
     return ROW_LETTERS[row] + str(col)
-
 
 def code_50w(B: float, L: float) -> str:
     """1:50万：在1:100万内 2行×2列=4格"""
