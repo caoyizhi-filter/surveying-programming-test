@@ -79,9 +79,9 @@ def dms_to_dec(dms_str: str) -> float:
     """
     s = dms_str.strip()
     # 替换各种符号为统一分隔符
-    for ch in ["°", "′", "′", "'", "′"]:
+    for ch in ["°", "′", "'", "'", "'"]:
         s = s.replace(ch, " ")
-    for ch in ["″", "\"", "\""]:
+    for ch in ["″", "\"", """]:
         s = s.replace(ch, "")
     parts = s.split()
     deg = float(parts[0]) if len(parts) > 0 else 0.0
@@ -109,7 +109,7 @@ def dec_to_dms(dec: float) -> str:
 def code_1m(B: float, L: float) -> str:
     """1:100万图幅编号（公式1）"""
     row = int(B / 4.0)           # 0起
-    col = int(L / 6.0) + 31      # 列号
+    col = int((L + 180.0) / 6.0) # 列号（从西经180°起算）
     return ROW_LETTERS[row] + str(col)
 
 

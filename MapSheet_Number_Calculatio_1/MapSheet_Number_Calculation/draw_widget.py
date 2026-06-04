@@ -69,8 +69,14 @@ class DrawWidget(QWidget):
         H = self.height() - 2 * self.MARGIN
 
         def to_px(B, L):
-            x = self.MARGIN + (L - L_min) / (L_max - L_min) * W
-            y = self.MARGIN + (B_max - B) / (B_max - B_min) * H
+            if B_max == B_min:
+                y = self.MARGIN + H / 2
+            else:
+                y = self.MARGIN + (B_max - B) / (B_max - B_min) * H
+            if L_max == L_min:
+                x = self.MARGIN + W / 2
+            else:
+                x = self.MARGIN + (L - L_min) / (L_max - L_min) * W
             return x, y
 
         # 绘制图幅网格
