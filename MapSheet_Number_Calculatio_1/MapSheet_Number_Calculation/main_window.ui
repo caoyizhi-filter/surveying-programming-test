@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>1200</width><height>760</height></rect>
+  </property>
+  <property name="windowTitle">
+   <string>地形图图幅编号计算系统</string>
+  </property>
+
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="hLayout">
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation"><enum>Qt::Horizontal</enum></property>
+
+      <!-- 左：结果表格 -->
+      <widget class="QWidget" name="widgetLeft">
+       <layout class="QVBoxLayout" name="vLeft">
+        <item>
+         <widget class="QLabel" name="labelResult">
+          <property name="text"><string>计算结果（30项）</string></property>
+          <property name="alignment"><set>Qt::AlignCenter</set></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tableResult">
+          <property name="alternatingRowColors"><bool>true</bool></property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- 右：绘图区 + 比例尺切换 -->
+      <widget class="QWidget" name="widgetRight">
+       <layout class="QVBoxLayout" name="vRight">
+
+        <!-- 比例尺切换工具栏 -->
+        <item>
+         <layout class="QHBoxLayout" name="hScale">
+          <item>
+           <widget class="QLabel" name="labelScale">
+            <property name="text"><string>显示比例尺：</string></property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboScale">
+           </widget>
+          </item>
+          <item>
+           <spacer>
+            <property name="orientation"><enum>Qt::Horizontal</enum></property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+
+        <!-- 绘图区 -->
+        <item>
+         <widget class="QWidget" name="widget_canvas">
+          <property name="minimumSize">
+           <size><width>500</width><height>400</height></size>
+          </property>
+         </widget>
+        </item>
+
+       </layout>
+      </widget>
+
+     </widget>
+    </item>
+   </layout>
+  </widget>
+
+  <!-- 菜单栏 -->
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect><x>0</x><y>0</y><width>1200</width><height>30</height></rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title"><string>文件(&amp;F)</string></property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuOp">
+    <property name="title"><string>操作(&amp;O)</string></property>
+    <addaction name="actionCalc"/>
+    <addaction name="actionDraw"/>
+    <addaction name="separator"/>
+    <addaction name="actionClear"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuOp"/>
+  </widget>
+
+  <!-- 工具栏 -->
+  <widget class="QToolBar" name="toolBar">
+   <attribute name="toolBarArea"><enum>TopToolBarArea</enum></attribute>
+   <addaction name="actionOpen"/>
+   <addaction name="actionCalc"/>
+   <addaction name="actionSave"/>
+   <addaction name="separator"/>
+   <addaction name="actionDraw"/>
+   <addaction name="separator"/>
+   <addaction name="actionClear"/>
+  </widget>
+
+  <widget class="QStatusBar" name="statusbar"/>
+
+  <action name="actionOpen">
+   <property name="text"><string>打开数据文件(&amp;O)</string></property>
+   <property name="shortcut"><string>Ctrl+O</string></property>
+  </action>
+  <action name="actionCalc">
+   <property name="text"><string>计算(&amp;C)</string></property>
+   <property name="shortcut"><string>F5</string></property>
+  </action>
+  <action name="actionSave">
+   <property name="text"><string>保存结果(&amp;S)</string></property>
+   <property name="shortcut"><string>Ctrl+S</string></property>
+  </action>
+  <action name="actionDraw">
+   <property name="text"><string>绘图(&amp;D)</string></property>
+   <property name="shortcut"><string>F6</string></property>
+  </action>
+  <action name="actionExit">
+   <property name="text"><string>退出(&amp;Q)</string></property>
+   <property name="shortcut"><string>Ctrl+Q</string></property>
+  </action>
+  <action name="actionClear">
+   <property name="text"><string>清除</string></property>
+  </action>
+
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
