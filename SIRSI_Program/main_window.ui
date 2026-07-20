@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>1400</width><height>850</height></rect>
+  </property>
+  <property name="windowTitle">
+   <string>遥感图像空间前方交会系统</string>
+  </property>
+
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="hLayout">
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation"><enum>Qt::Horizontal</enum></property>
+
+      <!-- 左：数据表格 -->
+      <widget class="QGroupBox" name="groupData">
+       <property name="title"><string>同名像点数据与计算结果</string></property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QTableWidget" name="tableData">
+          <property name="alternatingRowColors"><bool>true</bool></property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+      <!-- 右：三维可视化 -->
+      <widget class="QGroupBox" name="groupView">
+       <property name="title"><string>三维可视化</string></property>
+       <layout class="QVBoxLayout">
+        <item>
+         <widget class="QWidget" name="glWidget" native="true">
+          <property name="minimumSize"><size><width>400</width><height>350</height></size></property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+
+     </widget>
+    </item>
+   </layout>
+  </widget>
+
+  <!-- 菜单栏 -->
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect><x>0</x><y>0</y><width>1400</width><height>30</height></rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title"><string>文件(&amp;F)</string></property>
+    <addaction name="actionOpenEO"/>
+    <addaction name="actionOpenPoints"/>
+    <addaction name="actionExport"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuOp">
+    <property name="title"><string>操作(&amp;O)</string></property>
+    <addaction name="actionRun"/>
+    <addaction name="separator"/>
+    <addaction name="actionClear"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuOp"/>
+  </widget>
+
+  <!-- 工具栏 -->
+  <widget class="QToolBar" name="toolBar">
+   <attribute name="toolBarArea"><enum>TopToolBarArea</enum></attribute>
+   <addaction name="actionOpenEO"/>
+   <addaction name="actionOpenPoints"/>
+   <addaction name="actionRun"/>
+   <addaction name="actionExport"/>
+   <addaction name="separator"/>
+   <addaction name="actionClear"/>
+  </widget>
+
+  <widget class="QStatusBar" name="statusbar"/>
+
+  <action name="actionOpenEO">
+   <property name="text"><string>读取外方位文件(&amp;E)</string></property>
+   <property name="shortcut"><string>Ctrl+E</string></property>
+  </action>
+  <action name="actionOpenPoints">
+   <property name="text"><string>读取同名像点(&amp;P)</string></property>
+   <property name="shortcut"><string>Ctrl+P</string></property>
+  </action>
+  <action name="actionRun">
+   <property name="text"><string>空间前方交会解算(&amp;R)</string></property>
+   <property name="shortcut"><string>F5</string></property>
+  </action>
+  <action name="actionExport">
+   <property name="text"><string>导出结果(&amp;S)</string></property>
+   <property name="shortcut"><string>Ctrl+S</string></property>
+  </action>
+  <action name="actionClear">
+   <property name="text"><string>清空数据</string></property>
+  </action>
+  <action name="actionExit">
+   <property name="text"><string>程序退出(&amp;Q)</string></property>
+   <property name="shortcut"><string>Ctrl+Q</string></property>
+  </action>
+
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
