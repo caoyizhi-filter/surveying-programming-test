@@ -59,7 +59,6 @@ class App(QMainWindow):
             f"验证: {self._paths['verify'].split('/')[-1]}")
 
     def _calc(self):
-        algo.DEBUG = False
         self._r = algo.run_all(self._paths["train"], self._paths["pixels"],
                                self._paths["verify"], "mlc_result.txt")
         r = self._r
