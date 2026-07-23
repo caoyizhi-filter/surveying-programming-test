@@ -1,6 +1,16 @@
 # 导入系统内置数学库，用于自然对数ln计算，无任何第三方库
 import math
 
+# ===================== 调试开关 =====================
+DEBUG = True
+
+def _debug(*args, **kwargs):
+    """可控调试输出：DEBUG=True 时打印，False 时静默"""
+    if DEBUG:
+        # 使用 builtins.print 避免递归（本文件所有 print 已替换为 _debug）
+        import builtins
+        builtins.print(*args, **kwargs)
+
 # ===================== 第一部分：底层向量、矩阵基础运算工具 =====================
 def vec_sub(v1, v2):
     """
@@ -13,9 +23,9 @@ def vec_sub(v1, v2):
     """
     res = [v1[i] - v2[i] for i in range(len(v1))]
     # ===== 推荐在本行左侧行号处点击红点设置断点 =====
-    print("【vec_sub调试】输入v1 =", v1)
-    print("【vec_sub调试】输入v2 =", v2)
-    print("【vec_sub调试】输出结果 =", res)
+    _debug("【vec_sub调试】输入v1 =", v1)
+    _debug("【vec_sub调试】输入v2 =", v2)
+    _debug("【vec_sub调试】输出结果 =", res)
     return res
 
 
@@ -29,7 +39,7 @@ def vec_dot(v1, v2):
     sum_result = 0.0
     for a, b in zip(v1, v2):
         sum_result += a * b
-    print("【vec_dot调试】v1=", v1, "v2=", v2, "内积结果=", sum_result)
+    _debug("【vec_dot调试】v1=", v1, "v2=", v2, "内积结果=", sum_result)
     return sum_result
 
 
@@ -45,8 +55,8 @@ def vec_mul_T(v):
     for i in range(n_dim):
         for j in range(n_dim):
             outer_matrix[i][j] = v[i] * v[j]
-    print("【vec_mul_T调试】输入向量v=", v)
-    print("【vec_mul_T调试】外积矩阵：", outer_matrix)
+    _debug("【vec_mul_T调试】输入向量v=", v)
+    _debug("【vec_mul_T调试】外积矩阵：", outer_matrix)
     return outer_matrix
 
 
@@ -68,7 +78,7 @@ def mat_add(m1, m2):
             # 修复：m1[i][j] 取出对应位置标量
             res_mat[i][j] = m1[i][j] + m2[i][j]
     # ===== 推荐在此行左侧设置断点 =====
-    print("【mat_add调试】矩阵1=",m1,"矩阵2=",m2,"相加结果=",res_mat)
+    _debug("【mat_add调试】矩阵1=",m1,"矩阵2=",m2,"相加结果=",res_mat)
     return res_mat
 
 
@@ -84,7 +94,7 @@ def mat_scalar(mat, k):
     for i in range(n):
         for j in range(n):
             res_mat[i][j] = mat[i][j] * k
-    print("【mat_scalar调试】乘数k=", k, "数乘后矩阵=", res_mat)
+    _debug("【mat_scalar调试】乘数k=", k, "数乘后矩阵=", res_mat)
     return res_mat
 
 
@@ -101,7 +111,7 @@ def mat_vec_mul(mat, vec):
         for j in range(n):
             row_sum += mat[i] * vec[j]
         res_vec[i] = row_sum
-    print("【mat_vec_mul调试】矩阵乘向量结果：", res_vec)
+    _debug("【mat_vec_mul调试】矩阵乘向量结果：", res_vec)
     return res_vec
 
 
@@ -119,7 +129,7 @@ def vec_mat_mul(vec, mat):
         for i in range(n):
             col_sum += vec[i] * mat[i][j]
         res_vec[j] = col_sum
-    print("【vec_mat_mul调试】行向量乘矩阵结果：", res_vec)
+    _debug("【vec_mat_mul调试】行向量乘矩阵结果：", res_vec)
     return res_vec
 
 # ===================== 第二部分：矩阵高级运算（行列式、求逆） =====================
@@ -141,7 +151,7 @@ def mat_det(mat):
             if abs(m_copy[r][col]) > abs(m_copy[pivot_row][col]):
                 pivot_row = r
         if abs(m_copy[pivot_row][col]) < 1e-12:
-            print("【mat_det警告】矩阵奇异，行列式=0")
+            _debug("【mat_det警告】矩阵奇异，行列式=0")
             return 0.0
         if pivot_row != col:
             m_copy[col], m_copy[pivot_row] = m_copy[pivot_row], m_copy[col]
@@ -154,7 +164,7 @@ def mat_det(mat):
             factor = m_copy[r][col]
             for j in range(col, n):
                 m_copy[r][j] -= factor * m_copy[col][j]
-    print("【mat_det调试】输入矩阵行列式 =", det_val)
+    _debug("【mat_det调试】输入矩阵行列式 =", det_val)
     return det_val
 
 
@@ -190,7 +200,7 @@ def mat_inv(mat):
                 for j in range(col, 2 * n):
                     aug_mat[r][j] -= fac * aug_mat[col][j]
     inv_result = [[aug_mat[i][j + n] for j in range(n)] for i in range(n)]
-    print("【mat_inv调试】原始矩阵求逆完成，逆矩阵：", inv_result)
+    _debug("【mat_inv调试】原始矩阵求逆完成，逆矩阵：", inv_result)
     return inv_result
 
 # ===================== 第三部分：文件读取函数 =====================
@@ -212,9 +222,9 @@ def read_train(filepath):
             if class_id not in class_group:
                 class_group[class_id] = []
             class_group[class_id].append(sample_vec)
-    print("【read_train调试】读取完成，各类样本数量：")
+    _debug("【read_train调试】读取完成，各类样本数量：")
     for c, lst in class_group.items():
-        print(f"类别{c}：{len(lst)}条样本")
+        _debug(f"类别{c}：{len(lst)}条样本")
     return class_group
 
 
@@ -229,8 +239,8 @@ def read_pixel(filepath):
                 continue
             pixel_vec = list(map(float, line.split(",")))
             pixel_list.append(pixel_vec)
-    print("【read_pixel调试】待分类像元总数：", len(pixel_list))
-    print("【read_pixel调试】第一条像元光谱：", pixel_list[0])
+    _debug("【read_pixel调试】待分类像元总数：", len(pixel_list))
+    _debug("【read_pixel调试】第一条像元光谱：", pixel_list[0])
     return pixel_list
 
 
@@ -247,7 +257,7 @@ def read_verify(filepath):
             true_class = int(parts[0])
             spec_vec = parts[1:]
             verify_data.append((true_class, spec_vec))
-    print("【read_verify调试】验证样本总数：", len(verify_data))
+    _debug("【read_verify调试】验证样本总数：", len(verify_data))
     return verify_data
 
 # ===================== 第四部分：均值、协方差计算 =====================
@@ -260,7 +270,7 @@ def calc_mean(sample_list):
             sum_band[i] += vec[i]
     sample_count = len(sample_list)
     mean_vec = [s / sample_count for s in sum_band]
-    print("【calc_mean调试】样本数量", sample_count, "均值向量：", mean_vec)
+    _debug("【calc_mean调试】样本数量", sample_count, "均值向量：", mean_vec)
     return mean_vec
 
 
@@ -274,7 +284,7 @@ def calc_cov_unbiased(sample_list, mean_vec):
         outer = vec_mul_T(dx)
         total_outer_mat = mat_add(total_outer_mat, outer)
     cov_matrix = mat_scalar(total_outer_mat, 1.0 / (N - 1))
-    print("【calc_cov_unbiased调试】无偏协方差矩阵：", cov_matrix)
+    _debug("【calc_cov_unbiased调试】无偏协方差矩阵：", cov_matrix)
     return cov_matrix
 
 # ===================== 第五部分：对数似然计算 =====================
@@ -289,7 +299,7 @@ def calc_g(x, mu, cov):
     quad_term = vec_dot(temp_vec, dx)
     log_det = math.log(det_sigma)
     g_val = log_det + quad_term
-    print("【calc_g调试】像元x=", x, "g值=", g_val)
+    _debug("【calc_g调试】像元x=", x, "g值=", g_val)
     return g_val, det_sigma, inv_sigma
 
 # ===================== 第六部分：混淆矩阵、OA、Kappa =====================
@@ -314,7 +324,7 @@ def build_confusion(verify_data, class_mean_dict, class_cov_dict):
         row = idx_map[true_class]
         col = idx_map[pred_class]
         confusion[row][col] += 1
-    print("【build_confusion调试】混淆矩阵：",confusion)
+    _debug("【build_confusion调试】混淆矩阵：",confusion)
     return confusion, idx_map
 
 
@@ -342,44 +352,21 @@ def calc_oa_kappa(conf_mat):
         Kappa = 0.0
     else:
         Kappa = (OA - Pe) / (1 - Pe)
-    print(f"【calc_oa_kappa调试】正确数{correct_sample},总样本{total_sample},OA={OA:.4f},Kappa={Kappa:.4f}")
+    _debug(f"【calc_oa_kappa调试】正确数{correct_sample},总样本{total_sample},OA={OA:.4f},Kappa={Kappa:.4f}")
     return correct_sample, total_sample, OA, Kappa
 
-# ======================================
-# 模式1：底层向量矩阵单元测试（默认启用，直接Run不会报错）
-# ======================================
-# if __name__ == "__main__":
-#     print("========== 底层函数单元测试开始 ==========")
-#     # 向量减法测试
-#     print("\n1.测试 vec_sub")
-#     t1 = [1, 2]
-#     t2 = [0.5, 1]
-#     vec_sub(t1, t2)
-#
-#     # 向量内积测试
-#     print("\n2.测试 vec_dot")
-#     vec_dot([2, 3], [4, 5])
-#
-#     # 外积测试
-#     print("\n3.测试 vec_mul_T")
-#     vec_mul_T([1.5, 2.2])
-#
-#     # 二阶行列式测试
-#     print("\n4.测试 mat_det")
-#     test_m = [[2, 1], [1, 3]]
-#     mat_det(test_m)
 
-# ======================================
-# 模式2：完整遥感分类程序
-# 使用方法：注释上方模式1全部代码，取消下方#注释再Run
-# ======================================
-
-if __name__ == "__main__":
-    print("========== 完整最大似然分类程序启动 ==========")
+def run_all(train_path="train.txt", pixel_path="pixel.txt",
+            verify_path="verify.txt", output_path="mlc_result.txt"):
+    """
+    执行完整最大似然分类流程，返回结果字典。
+    可从命令行直接运行，也可被 GUI 调用。
+    """
+    _debug("========== 完整最大似然分类程序启动 ==========")
     # 读取三份数据文件
-    train_data = read_train("train.txt")
-    pixel_data = read_pixel("pixel.txt")
-    verify_data = read_verify("verify.txt")
+    train_data = read_train(train_path)
+    pixel_data = read_pixel(pixel_path)
+    verify_data = read_verify(verify_path)
     class_list = sorted(train_data.keys())
     c1 = class_list[0]
     c2 = class_list[1]
@@ -440,6 +427,24 @@ if __name__ == "__main__":
     output.append(f"15,分类 Kappa 系数,{KAP:.4f}")
     output.append(f"16,所有待分类像元中类别 1 总个数,{count_cls1}")
     output.append(f"17,所有待分类像元中类别 2 总个数,{count_cls2}")
-    with open("mlc_result.txt", "w", encoding="utf-8") as f:
+    with open(output_path, "w", encoding="utf-8") as f:
         f.write("\n".join(output))
-    print("分类完成，结果已保存至 mlc_result.txt")
+    _debug("分类完成，结果已保存至 " + output_path)
+
+    return {
+        "train_data": train_data,
+        "pixel_data": pixel_data,
+        "verify_data": verify_data,
+        "num1": num1, "num2": num2,
+        "mu1": mu1, "mu2": mu2,
+        "cov1": cov1, "cov2": cov2,
+        "det1": det1, "det2": det2,
+        "count_cls1": count_cls1, "count_cls2": count_cls2,
+        "first_g1": first_g1, "first_g2": first_g2, "first_pred": first_pred,
+        "confusion": conf, "corr": corr, "total_v": total_v,
+        "OA": OA, "KAP": KAP,
+    }
+
+
+if __name__ == "__main__":
+    run_all()
