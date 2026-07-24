@@ -29,14 +29,6 @@ def vec_norm(v):
 
 # ---- 平面几何 ----
 
-def build_plane(p1, p2, p3):
-    v1 = vec_sub(p2, p1)
-    v2 = vec_sub(p3, p1)
-    A, B, C = vec_cross(v1, v2)
-    D = -(A * p1[0] + B * p1[1] + C * p1[2])
-    return (A, B, C, D)
-
-
 def point_to_plane_dist(pt, A, B, C, D):
     num = A * pt[0] + B * pt[1] + C * pt[2] + D
     den = math.sqrt(A * A + B * B + C * C)
@@ -59,25 +51,22 @@ def triangle_area(p1, p2, p3):
 
 # ---- 栅格统计 ----
 
+def grid_cell_of(x, y, xmin, ymin, dx, dy, nx, ny):
+    i = int((x - xmin) / dx)
+    j = int((y - ymin) / dy)
+    return max(0, min(i, nx - 1)), max(0, min(j, ny - 1))
+
+
 def build_grid(pts_xyz, xmin, xmax, ymin, ymax, nx=10, ny=10):
     dx = (xmax - xmin) / nx
     dy = (ymax - ymin) / ny
     grid = {}
     for idx, (x, y, z) in enumerate(pts_xyz):
-        i = int((x - xmin) / dx)
-        j = int((y - ymin) / dy)
-        i = max(0, min(i, nx - 1))
-        j = max(0, min(j, ny - 1))
+        i, j = grid_cell_of(x, y, xmin, ymin, dx, dy, nx, ny)
         if (i, j) not in grid:
             grid[(i, j)] = []
         grid[(i, j)].append((idx, z))
     return grid, dx, dy
-
-
-def grid_cell_of(x, y, xmin, ymin, dx, dy, nx, ny):
-    i = int((x - xmin) / dx)
-    j = int((y - ymin) / dy)
-    return max(0, min(i, nx - 1)), max(0, min(j, ny - 1))
 
 
 def grid_stats(z_list):
@@ -177,26 +166,29 @@ def read_plane_cloud(filepath):
     return pts
 
 
-# ---- RANSAC 主流程（【竞赛题切换点】换题时重写此函数）----
+# ---- RANSAC 主流程 ----
+# 【竞赛题切换点】换题时修改以下所有标记位置
+#
+# 切换清单（按修改顺序）：
+#   1. 算法参数常量（RANSAC_T / K_MAX / SEED / GRID 等）
+#   2. WINDOW_TITLE 窗口标题
+#   3. read_plane_cloud()  数据文件解析格式
+#   4. run_all() 主函数内部 —— 测点索引、table_rows 内容、gui_config 文案
+#   5. run_all() 参数默认值（input_path / output_path）
 
-RANSAC_T = 0.25
-RANSAC_K_MAX = 2000
-RANSAC_SEED = 42
-GRID_NX = 10
-GRID_NY = 10
+RANSAC_T = 0.25          # 【竞赛题切换点】RANSAC 距离阈值
+RANSAC_K_MAX = 2000      # 【竞赛题切换点】最大迭代次数
+RANSAC_SEED = 42         # 【竞赛题切换点】随机种子（可改可不改）
+GRID_NX = 10             # 【竞赛题切换点】栅格列数
+GRID_NY = 10             # 【竞赛题切换点】栅格行数
 
-# 竞赛题目配置（单独提取，供GUI初始化时使用）
-CONFIG = {
-    "window_title": "基于RANSAC算法的稳健平面参数估计系统",
-}
-
-
-def get_config():
-    """获取竞赛题目配置（供GUI初始化时使用，不执行计算）"""
-    return CONFIG.copy()
+# 【竞赛题切换点】窗口标题
+WINDOW_TITLE = "基于RANSAC算法的稳健平面参数估计系统"
 
 
 def run_all(input_path="plane_cloud.txt", output_path="plane_analysis_result.txt"):
+    # 【竞赛题切换点】↑ 默认文件名和输出文件名
+
     # 1. 读取数据
     pts_xyz = read_plane_cloud(input_path)
     n = len(pts_xyz)
@@ -214,14 +206,16 @@ def run_all(input_path="plane_cloud.txt", output_path="plane_analysis_result.txt
     zmin, zmax = min(zs), max(zs)
 
     # 3. 三角形面积 P1-P2-P3
+    # 【竞赛题切换点】P1/P2/P3 的索引（此处为 0/1/2，即前三个点）
     tri_area = triangle_area(pts_xyz[0], pts_xyz[1], pts_xyz[2])
 
     # 4. P5 所在栅格统计
+    # 【竞赛题切换点】P5 的索引（此处为 4）
     grid, dx, dy = build_grid(pts_xyz, xmin, xmax, ymin, ymax, GRID_NX, GRID_NY)
     p5 = pts_xyz[4]
     gi, gj = grid_cell_of(p5[0], p5[1], xmin, ymin, dx, dy, GRID_NX, GRID_NY)
     cell_entries = grid.get((gi, gj), [])
-    # 简化过滤：排除 P5 自身
+    # 【竞赛题切换点】排除 P5 自身的索引（此处为 4）
     cell_zs = [z for idx, z in cell_entries if idx != 4]
     g_cnt, g_mean, g_max, g_rng, g_var = grid_stats(cell_zs)
 
@@ -234,10 +228,12 @@ def run_all(input_path="plane_cloud.txt", output_path="plane_analysis_result.txt
         s = rng.sample(range(n), 3)
         p1, p2, p3 = pts_xyz[s[0]], pts_xyz[s[1]], pts_xyz[s[2]]
 
-        if triangle_area(p1, p2, p3) < 1e-12:
+        v1 = vec_sub(p2, p1)
+        v2 = vec_sub(p3, p1)
+        A, B, C = vec_cross(v1, v2)
+        if vec_norm((A, B, C)) < 1e-12:
             continue
-
-        A, B, C, D = build_plane(p1, p2, p3)
+        D = -(A * p1[0] + B * p1[1] + C * p1[2])
         inlier_ids = []
         for i, pt in enumerate(pts_xyz):
             if point_to_plane_dist(pt, A, B, C, D) <= RANSAC_T:
@@ -258,6 +254,7 @@ def run_all(input_path="plane_cloud.txt", output_path="plane_analysis_result.txt
     s1_inlier_pts = [pts_xyz[i] for i in range(n) if i in inlier_set]
     s1_outlier_pts = [pts_xyz[i] for i in range(n) if i not in inlier_set]
 
+    # 【竞赛题切换点】P5=4, P1000=999
     dist_p5_s1 = point_to_plane_dist(pts_xyz[4], s1_A, s1_B, s1_C, s1_D)
     dist_p1000_s1 = point_to_plane_dist(pts_xyz[999], s1_A, s1_B, s1_C, s1_D)
 
@@ -275,11 +272,12 @@ def run_all(input_path="plane_cloud.txt", output_path="plane_analysis_result.txt
     j2_outlier_count = n - j2_inlier_count
 
     # 8. 投影坐标
+    # 【竞赛题切换点】P5=4, P800=799
     proj_p5 = project_to_plane(pts_xyz[4], j1_A, j1_B, j1_C, j1_D)
     proj_p800 = project_to_plane(pts_xyz[799], j1_A, j1_B, j1_C, j1_D)
 
     # 9. 组装输出
-    # 【竞赛题切换点】按新题需求增删改 table_rows 行
+    # 【竞赛题切换点】按新题需求增删改以下全部 table_rows
     p5x, p5y, p5z = pts_xyz[4]
     table_rows = [
         (1,  "P5的X坐标值",                    f"{p5x:.3f}"),
@@ -328,15 +326,16 @@ def run_all(input_path="plane_cloud.txt", output_path="plane_analysis_result.txt
     ]
 
     # 写结果文件
+    # 【竞赛题切换点】CSV 表头按新题修改
     with open(output_path, "w", encoding="utf-8") as f:
         f.write("序号,指标名称,计算结果\n")
         for no, label, val in table_rows:
             f.write(f"{no},{label},{val}\n")
 
     # 10. 构建 GUI 配置
-    # 【竞赛题切换点】换题时修改窗口标题和状态栏文本
+    # 【竞赛题切换点】修改状态栏汇总信息和输出文件名
     gui_config = {
-        "window_title": CONFIG["window_title"],
+        "window_title": WINDOW_TITLE,
         "status_message": (
             f"完成 | 总点数={n} | "
             f"S1内点={s1_inlier_count} S1粗差={s1_outlier_count} | "

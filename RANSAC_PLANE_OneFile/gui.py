@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QFileDialog, QTableWidge
                               QGroupBox, QVBoxLayout, QTableWidget, QLabel)
 from PyQt5.QtCore import Qt
 
-from ransac_core import run_all, get_config
+from ransac_core import run_all, WINDOW_TITLE
 
 
 class App(QMainWindow):
@@ -38,9 +38,7 @@ class App(QMainWindow):
 
     def _load_title(self):
         """只获取竞赛题目标题（不执行计算）"""
-        cfg = get_config()
-        title = cfg.get("window_title", "竞赛程序系统")
-        self.setWindowTitle(title)
+        self.setWindowTitle(WINDOW_TITLE)
         self.statusBar().showMessage("请选择数据文件并点击计算")
 
     def _fill_table(self):
@@ -100,6 +98,7 @@ class App(QMainWindow):
         lay = QVBoxLayout(gb)
         lay.addWidget(self.labelFile)
 
+        # 表格列头需与 ransac_core 输出的 table_rows 三元组对应
         self.tableResult = QTableWidget()
         self.tableResult.setColumnCount(3)
         self.tableResult.setHorizontalHeaderLabels(["序号", "指标", "计算结果"])
@@ -121,43 +120,41 @@ class App(QMainWindow):
             return
         self._cloud_path = path
         filename = os.path.basename(path)
-        self.labelFile.setText("点云数据: " + filename)
+        self.labelFile.setText(f"点云数据: {filename}")
 
     def _calc(self):
         try:
             r = run_all(self._cloud_path, "result.txt")
         except Exception as e:
-            self.statusBar().showMessage("计算失败: " + str(e))
+            self.statusBar().showMessage(f"计算失败: {e}")
             return
 
         self._table_rows = r["table_rows"]
         self._config = r.get("config", {})
 
-        # 设置窗口标题
-        title = self._config.get("window_title", "竞赛程序系统")
-        self.setWindowTitle(title)
-
-        # 填充表格（复用 _fill_table 方法）
+        # 填充表格
         self._fill_table()
 
-        # 设置状态栏消息
+        # 从 config 读取标题和状态栏
+        title = self._config.get("window_title", WINDOW_TITLE)
+        self.setWindowTitle(title)
         msg = self._config.get("status_message", "计算完成")
         self.statusBar().showMessage(msg)
 
     def _save(self):
         if not self._table_rows:
             return
-        # 简化条件判断
         default_name = "result.txt"
         if self._config:
             default_name = self._config.get("output_file", "result.txt")
         path, _ = QFileDialog.getSaveFileName(self, "", default_name, "文本文件 (*.txt)")
         if not path:
             return
+        # CSV 表头需与 ransac_core.run_all() 内部保持一致
         with open(path, "w", encoding="utf-8") as f:
             f.write("序号,指标名称,计算结果\n")
             for no, lb, val in self._table_rows:
-                f.write(str(no) + "," + lb + "," + val + "\n")
+                f.write(f"{no},{lb},{val}\n")
 
     def _clear(self):
         self._cloud_path = os.path.join(os.path.dirname(__file__), "plane_cloud.txt")
@@ -166,9 +163,7 @@ class App(QMainWindow):
         self.tableResult.setRowCount(0)
         self.labelFile.setText("未加载数据")
         # 恢复标题为竞赛题目
-        cfg = get_config()
-        title = cfg.get("window_title", "竞赛程序系统")
-        self.setWindowTitle(title)
+        self.setWindowTitle(WINDOW_TITLE)
         self.statusBar().showMessage("请选择数据文件并点击计算")
 
 
