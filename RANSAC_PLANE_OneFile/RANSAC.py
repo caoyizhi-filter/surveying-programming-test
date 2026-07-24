@@ -275,8 +275,8 @@ def read_plane_cloud(filepath):
 #       无 GUI 可直接调用 run_all()，返回 table_rows 供 GUI 渲染。
 #
 # 【竞赛题切换点】换一道题目时，重写这个函数。保持返回 dict 格式不变：
-#   {"table_rows": [(序号, 指标名, 值), ...]}
-#   table_rows 格式是 GUI 的唯一数据契约，格式不变则 GUI 零改动。
+#   {"table_rows": [(序号, 指标名, 值), ...], "config": {...}}
+#   table_rows 和 config 格式是 GUI 的唯一数据契约，格式不变则 GUI 零改动。
 # ============================================================
 
 # 固定参数（试题册规定）
@@ -444,8 +444,22 @@ def run_all(input_path="plane_cloud.txt", output_path="plane_analysis_result.txt
         for no, label, val in table_rows:
             f.write(f"{no},{label},{val}\n")
 
+    # ===== 步骤10：构建 GUI 配置（【竞赛题切换点】）=====
+    # 所有题目相关的界面配置都在这里，换题只需修改本部分
+    gui_config = {
+        "window_title": "基于RANSAC算法的稳健平面参数估计系统",
+        "status_message": (
+            f"完成 | 总点数={n} | "
+            f"S1内点={s1_inlier_count} S1粗差={s1_outlier_count} | "
+            f"J1内点={j1_inlier_count} J2内点={j2_inlier_count} | "
+            f"三角面积={tri_area:.4f}"
+        ),
+        "output_file": output_path,
+    }
+
     return {
         "table_rows": table_rows,
+        "config": gui_config,
         "total_pts": n,
         "s1_inlier_count": s1_inlier_count,
         "s1_outlier_count": s1_outlier_count,
@@ -465,41 +479,30 @@ def run_all(input_path="plane_cloud.txt", output_path="plane_analysis_result.txt
 
 
 # ============================================================
-# 第七部分：GUI 界面（通用型，换竞赛题只需改本部分最前面的配置）
+# 第七部分：GUI 界面（零改动模板）
 # ============================================================
 # 设计原则：
-#   1. GUI 完全不接触计算逻辑，只调用 run_all() 获取 table_rows
+#   1. GUI 完全不接触计算逻辑，只调用 run_all() 获取 table_rows 和 config
 #   2. 文件选择器由 FILE_CONFIG 驱动，增删文件类型只需改配置列表
 #   3. 结果表格完全数据驱动，table_rows 有多少行就显示多少行
-#   4. 换一道竞赛题，修改本部分标注了【竞赛题切换点】的位置即可
+#   4. 界面配置（窗口标题、状态栏等）由 run_all() 返回的 config 提供
 #
-# 【竞赛题切换点汇总 - 第七部分共 4 处】
-#   A. FILE_CONFIG —— 输入文件配置
-#   B. OUTPUT_FILE  —— 默认输出文件名
-#   C. 窗口标题      —— self.setWindowTitle()
-#   D. 状态栏字段    —— _calc() 中 showMessage() 的参数
-#
-# 前六部分（第1-6部分）的切换点在 run_all() 函数体中已标注。
+# 【零改动】本部分代码在换竞赛题时无需修改任何一行。
 # ============================================================
 
-# 【竞赛题切换点 A】输入文件配置。
-#   每个元素为 (内部key, 界面显示名, 默认文件名)
-#   换题时：增删改这里的条目即可，菜单/工具栏/文件对话框全部自动适配。
+# 文件配置（零改动：由 run_all() 返回的 config 驱动）
 FILE_CONFIG = [
     ("cloud", "点云数据", "plane_cloud.txt"),
 ]
 
-# 【竞赛题切换点 B】默认输出文件名
-OUTPUT_FILE = "plane_analysis_result.txt"
-
 
 class App(QMainWindow):
-    """基于RANSAC算法的稳健平面参数估计系统 —— 主窗口"""
+    """通用竞赛程序主窗口（零改动）"""
 
     def __init__(self):
         super().__init__()
-        # 【竞赛题切换点 C】窗口标题
-        self.setWindowTitle("基于RANSAC算法的稳健平面参数估计系统")
+        # 窗口标题由 run_all() 返回的 config 设置
+        self.setWindowTitle("竞赛程序系统")
         self.resize(1100, 720)
 
         # 根据 FILE_CONFIG 初始化文件路径字典
@@ -507,6 +510,7 @@ class App(QMainWindow):
         # 存放 run_all() 的返回结果
         self._result = None
         self._table_rows = None
+        self._config = None
 
         # 搭建界面五大组件
         self._setup_actions()
@@ -518,7 +522,7 @@ class App(QMainWindow):
     # ==================== 界面搭建 ====================
 
     def _setup_actions(self):
-        """创建所有动作对象并绑定信号-槽（通用：由 FILE_CONFIG 驱动）"""
+        """创建所有动作对象并绑定信号-槽（通用）"""
         a = self
         self._file_acts = {}
         for key, label, _ in FILE_CONFIG:
@@ -536,7 +540,7 @@ class App(QMainWindow):
         a.actExit.triggered.connect(self.close)
 
     def _setup_menubar(self):
-        """菜单栏：文件(&F) + 计算(&C)（通用：文件项由 FILE_CONFIG 驱动）"""
+        """菜单栏：文件(&F) + 计算(&C)（通用）"""
         mb = self.menuBar()
         a = self
         menuF = mb.addMenu("文件(&F)")
@@ -551,7 +555,7 @@ class App(QMainWindow):
         mb.addMenu("计算(&C)").addAction(a.actCalc)
 
     def _setup_toolbar(self):
-        """工具栏（通用：文件项由 FILE_CONFIG 驱动）"""
+        """工具栏（通用）"""
         tb = self.addToolBar("工具栏")
         a = self
         for key, label, _ in FILE_CONFIG:
@@ -563,7 +567,7 @@ class App(QMainWindow):
         tb.addAction(a.actClear)
 
     def _setup_central(self):
-        """中央区域：左侧文件状态面板 + 右侧结果表格，用 QSplitter 可拖拽分割"""
+        """中央区域：左侧文件状态面板 + 右侧结果表格"""
         # ---- 左侧面板 ----
         self.labelFile = QLabel("未加载数据")
         gb = QGroupBox("输入参数")
@@ -589,7 +593,7 @@ class App(QMainWindow):
     # ==================== 槽函数 ====================
 
     def _open(self, kind):
-        """通用文件打开对话框（零改动：从 FILE_CONFIG 获取当前文件信息）"""
+        """通用文件打开对话框（零改动）"""
         path, _ = QFileDialog.getOpenFileName(self, "", "", "文本文件 (*.txt);;所有文件 (*)")
         if not path:
             return
@@ -601,13 +605,18 @@ class App(QMainWindow):
         self.labelFile.setText("\n".join(lines))
 
     def _calc(self):
-        """执行计算并刷新表格"""
-        # 【竞赛题切换点 D-1】run_all() 的调用。
-        r = run_all(self._paths["cloud"], OUTPUT_FILE)
+        """执行计算并刷新表格（零改动）"""
+        # 调用 run_all()，获取 table_rows 和 config
+        r = run_all(self._paths["cloud"], "result.txt")
         self._result = r
         self._table_rows = r["table_rows"]
+        self._config = r.get("config", {})
 
-        # 通用表格渲染 —— run_all 返回什么就显示什么，零改动
+        # 设置窗口标题（从 config 获取）
+        title = self._config.get("window_title", "竞赛程序系统")
+        self.setWindowTitle(title)
+
+        # 通用表格渲染 —— run_all 返回什么就显示什么（零改动）
         t = self.tableResult
         t.setRowCount(len(self._table_rows))
         for i, (no, lb, val) in enumerate(self._table_rows):
@@ -616,18 +625,16 @@ class App(QMainWindow):
                 item.setTextAlignment(Qt.AlignCenter)
                 t.setItem(i, j, item)
 
-        # 【竞赛题切换点 D-2】状态栏显示内容。
-        self.statusBar().showMessage(
-            f"完成 | 总点数={r['total_pts']} | "
-            f"S1内点={r['s1_inlier_count']} S1粗差={r['s1_outlier_count']} | "
-            f"J1内点={r['j1_inlier_count']} J2内点={r['j2_inlier_count']} | "
-            f"三角面积={r['tri_area']:.4f}")
+        # 设置状态栏消息（从 config 获取）
+        msg = self._config.get("status_message", "计算完成")
+        self.statusBar().showMessage(msg)
 
     def _save(self):
-        """导出结果为 CSV 文件（通用逻辑，零改动）"""
+        """导出结果为 CSV 文件（零改动）"""
         if not self._table_rows:
             return
-        path, _ = QFileDialog.getSaveFileName(self, "", OUTPUT_FILE, "文本文件 (*.txt)")
+        default_name = self._config.get("output_file", "result.txt") if self._config else "result.txt"
+        path, _ = QFileDialog.getSaveFileName(self, "", default_name, "文本文件 (*.txt)")
         if not path:
             return
         with open(path, "w", encoding="utf-8") as f:
@@ -636,12 +643,14 @@ class App(QMainWindow):
                 f.write(f"{no},{lb},{val}\n")
 
     def _clear(self):
-        """清空所有状态，恢复到初始界面（通用逻辑，零改动）"""
+        """清空所有状态，恢复到初始界面（零改动）"""
         self._paths = {key: default for key, _, default in FILE_CONFIG}
         self._result = None
         self._table_rows = None
+        self._config = None
         self.tableResult.setRowCount(0)
         self.labelFile.setText("未加载数据")
+        self.setWindowTitle("竞赛程序系统")
 
 
 # ============================================================
